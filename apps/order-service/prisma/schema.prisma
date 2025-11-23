@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  orderNumber     String   @unique
+  userId          String?
+  sessionId       String?
+  
+  status          String   @default("pending") // pending, confirmed, paid, processing, shipped, delivered, cancelled
+  
+  subtotal        Decimal
+  discount        Decimal  @default(0)
+  shipping        Decimal  @default(0)
+  tax             Decimal  @default(0)
+  total           Decimal
+  
+  currency        String   @default("PLN")
+  
+  shippingAddress Json
+  billingAddress  Json?
+  
+  items           OrderItem[]
+  statusHistory   OrderStatusHistory[]
+  
+  paymentId       String?
+  paymentStatus   String?  // pending, authorized, captured, failed, refunded
+  
+  notes           String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("orders")
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  
+  sku       String
+  productId String
+  name      String
+  price     Decimal
+  quantity  Int
+  
+  attributes Json?
+  
+  @@map("order_items")
+}
+
+model OrderStatusHistory {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  
+  fromStatus String?
+  toStatus   String
+  reason     String?
+  
+  createdAt  DateTime @default(now())
+
+  @@map("order_status_history")
+  @@index([orderId])
+}

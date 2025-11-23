@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Payment {
+  id              String   @id @default(uuid())
+  orderId         String   @unique
+  
+  gateway         String   // przelewy24, stripe, blue_media
+  gatewayPaymentId String?
+  
+  amount          Decimal
+  currency        String   @default("PLN")
+  
+  status          String   @default("pending") // pending, authorized, captured, failed, refunded, cancelled
+  
+  attempts        PaymentAttempt[]
+  
+  metadata        Json?
+  
+  authorizedAt    DateTime?
+  capturedAt      DateTime?
+  failedAt        DateTime?
+  refundedAt      DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("payments")
+  @@index([orderId])
+  @@index([status])
+}
+
+model PaymentAttempt {
+  id              String   @id @default(uuid())
+  paymentId       String
+  payment         Payment  @relation(fields: [paymentId], references: [id])
+  
+  gateway         String
+  gatewayAttemptId String?
+  
+  amount          Decimal
+  status          String   // pending, success, failed
+  
+  errorCode       String?
+  errorMessage    String?
+  
+  webhookPayload  Json?
+  webhookSignature String?
+  
+  idempotencyKey  String?  @unique // For webhook deduplication
+  
+  createdAt       DateTime @default(now())
+
+  @@map("payment_attempts")
+  @@index([paymentId])
+  @@index([idempotencyKey])
+}

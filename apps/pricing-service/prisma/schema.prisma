@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PriceList {
+  id          String   @id @default(uuid())
+  name        String
+  channelId   String?  // shop, allegro, amazon, etc.
+  segmentId   String?  // vip, subscriber, new, etc.
+  currency    String   @default("PLN")
+  isActive    Boolean  @default(true)
+  
+  items       PriceListItem[]
+
+  validFrom   DateTime?
+  validTo     DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("pricing_lists")
+}
+
+model PriceListItem {
+  id          String   @id @default(uuid())
+  priceListId String
+  priceList   PriceList @relation(fields: [priceListId], references: [id])
+  
+  sku         String
+  price       Decimal
+  compareAtPrice Decimal? // Original price for showing discounts
+  
+  @@unique([priceListId, sku])
+  @@map("pricing_list_items")
+}
+
+model Promotion {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  type        String   // percentage, fixed_amount, buy_x_get_y
+  value       Decimal
+  
+  channelId   String?
+  segmentId   String?
+  
+  conditions  Json?    // Min cart value, specific products, etc.
+  
+  isActive    Boolean  @default(true)
+  validFrom   DateTime?
+  validTo     DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("pricing_promotions")
+}
+
+model Coupon {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  type        String   // percentage, fixed_amount
+  value       Decimal
+  
+  maxUses     Int?
+  usedCount   Int      @default(0)
+  
+  minCartValue Decimal?
+  
+  isActive    Boolean  @default(true)
+  validFrom   DateTime?
+  validTo     DateTime?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("pricing_coupons")
+}

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,45 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model InventoryItem {
+  id          String   @id @default(uuid())
+  sku         String   @unique
+  warehouseId String   @default("default")
+  
+  quantityOnHand      Int      @default(0)
+  quantityReserved    Int      @default(0)
+  quantityAvailable   Int      @default(0) // Computed or maintained via logic
+  
+  reservations Reservation[]
+
+  version     Int      @default(1) // Optimistic locking
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("inventory_items")
+  @@unique([sku, warehouseId])
+}
+
+model Reservation {
+  id            String   @id @default(uuid())
+  inventoryItemId String
+  inventoryItem InventoryItem @relation(fields: [inventoryItemId], references: [id])
+  
+  orderId       String?
+  cartId        String?
+  
+  quantity      Int
+  status        String   @default("active") // active, confirmed, cancelled, expired
+  
+  expiresAt     DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("inventory_reservations")
+  @@index([orderId])
+  @@index([expiresAt])
 }
