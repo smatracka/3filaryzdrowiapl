@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model StoreProduct {
+  id          String   @id @default(uuid())
+  pimId       String   @unique // Reference to PIM Product ID
+  sku         String   @unique
+  name        String
+  slug        String   @unique
+  description String?
+  price       Decimal
+  currency    String   @default("PLN")
+  
+  categoryId  String?
+  category    StoreCategory? @relation(fields: [categoryId], references: [id])
+
+  images      String[]
+  attributes  Json?    // Denormalized attributes for fast filtering
+  
+  isAvailable Boolean  @default(true)
+  stockStatus String   // in_stock, out_of_stock, backorder
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("store_products")
+  @@index([categoryId])
+  @@index([price])
+}
+
+model StoreCategory {
+  id        String   @id @default(uuid())
+  pimId     String   @unique // Reference to PIM Category ID
+  name      String
+  slug      String   @unique
+  parentId  String?
+  parent    StoreCategory? @relation("StoreCategoryHierarchy", fields: [parentId], references: [id])
+  children  StoreCategory[] @relation("StoreCategoryHierarchy")
+  
+  products  StoreProduct[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("store_categories")
+}

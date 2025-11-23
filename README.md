@@ -1,135 +1,303 @@
-# Turborepo starter
+# 🌿 Harmonia 360° — AI Health Twin & Wellness Cloud
 
-This Turborepo starter is maintained by the Turborepo core team.
+### **Next-generation health intelligence platform powering 3FilaryZdrowia & SuperApp Harmonia**
 
-## Using this example
+---
 
-Run the following command:
+<p align="center">
+  <img src="https://img.shields.io/badge/AI%20Health%20Twin-Live-brightgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=nextdotjs" />
+  <img src="https://img.shields.io/badge/NestJS-Microservices-ea2845?style=for-the-badge&logo=nestjs" />
+  <img src="https://img.shields.io/badge/FastAPI-ML-orange?style=for-the-badge&logo=fastapi" />
+  <img src="https://img.shields.io/badge/TimescaleDB-TimeSeries-blue?style=for-the-badge&logo=postgresql" />
+  <img src="https://img.shields.io/badge/LangChain-LangGraph-yellow?style=for-the-badge" />
+</p>
 
-```sh
-npx create-turbo@latest
-```
+---
 
-## What's inside?
+## ✨ O projekcie
 
-This Turborepo includes the following packages/apps:
+**Harmonia 360°** to kompletny ekosystem zdrowia i AI, który łączy:
 
-### Apps and Packages
+* 🧠 **AI Health Twin** — twój cyfrowy model zdrowia
+* 🔬 **interpretację biomarkerów** (laboratoryjnych & wearable)
+* ⌚ **integracje z Apple Health / Garmin / Fitbit / Oura**
+* 🔍 **AI-driven diagnostykę trendów i anomalii**
+* 🧬 **profil medyczny, suplementację, historię chorób**
+* 🌙 **sen, stres, regenerację, samopoczucie**
+* 🛍️ **powiązanie zdrowia z zakupami (3FilaryZdrowia)**
+* 🔥 **Silnik rekomendacji suplementów**
+* ⚙️ **microservices, AI pipelines & predictive analytics**
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+To fundament przyszłego **Super App Harmonia 360°**.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+---
 
-### Utilities
+## 🚀 Najważniejsze funkcje
 
-This Turborepo has some additional tools already setup for you:
+### 🔥 AI Health Twin
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+Tworzenie dynamicznego modelu zdrowia użytkownika:
 
-### Build
+* biological age
+* inflammation score
+* cardiovascular risk
+* hormonal balance
+* metabolic health
+* sleep & recovery twin
+* stress variability twin
 
-To build all apps and packages, run the following command:
+---
 
-```
-cd my-turborepo
+### 🔬 Biomarkers Engine
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+W pełni zgodny z:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
+* **parametry_badan_medycznych.md**
+* **biomarker_meta.yaml**
+* normy męskie/żeńskie, optimum, caution, clinical ranges
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+Obsługuje:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+* morfologię
+* lipidogram
+* hormony
+* markery zapalne
+* glukoza/insulina
+* kortyzol
+* witaminy (D3, B12 itd.)
+* metale ciężkie
+* mikrobiom
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+---
 
-### Develop
+### ⌚ Wearables Integrations
 
-To develop all apps and packages, run the following command:
+Oficjalnie wspierane:
 
-```
-cd my-turborepo
+* **Apple HealthKit**
+* **Garmin Connect**
+* **Fitbit API**
+* **Oura Cloud**
+* **Samsung Health**
+* **Withings**
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+Dane trafiają do **TimescaleDB** w strukturze time series.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
+---
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### 🧠 AI Reasoning Models
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+System wykorzystuje:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+* **BioGPT** – interpretacje kliniczne
+* **ClinicalBERT / PubMedBERT**
+* **MedAlpaca / Meditron**
+* **TimeGPT (Nixtla)** – forecasting
+* **Merlion** – anomaly detection
+* **LangGraph multi-agent**
+* **LLM Safety Layer** – medyczna filtracja i bezpieczeństwo
 
-### Remote Caching
+---
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+### 🌐 API: Health Cloud
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+Pełna dokumentacja API:
+**OpenAPI 3.1 – Health Profile API** → generowane automatycznie.
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+---
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 🧱 Architektura
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+harmonia/
+├── apps/
+│   ├── web/            # Next.js 15 frontend + RSC
+│   ├── mobile/         # React Native (SuperApp Harmonia)
+│   ├── lab/            # Streamlit labolatorium AI
+│   └── admin/          # Panel administracyjny
+│
+├── services/
+│   ├── api-gateway/    # GraphQL BFF / Router
+│   ├── profile/        # Health Profile + Medical + Biomarkers
+│   ├── health-twin/    # AI Twin Engine (Python)
+│   ├── recommender/    # Recommendation System (LTR / LightGBM)
+│   ├── wearables/      # Integracje: Apple, Garmin, Oura...
+│   ├── biomarker/      # Unit conversions, norms, meta loader
+│   ├── llm-assistant/  # LangChain + LangGraph Orchestrator
+│   └── cdp/            # Customer Data Platform
+│
+├── infra/
+│   ├── k8s/            # Deployment / Helm
+│   ├── terraform/      # IaC
+│   └── monitoring/     # Grafana, Prometheus, Loki
+│
+└── data/
+    ├── biomarker_meta.yaml
+    ├── parametry_badan_medycznych.md
+    ├── models/
+    └── dags/
 ```
 
-## Useful Links
+---
 
-Learn more about the power of Turborepo:
+## 🧬 Model użytkownika (skrót)
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+* **User Core**
+* **User Profile**
+* **Medical Profile**
+* **Biomarkers (meta + values)**
+* **Wearables Metrics**
+* **Lifestyle**
+* **Psychometric surveys**
+* **Health Twin**
+* **Recommendations**
+* **Subscriptions**
+* **CDP & Segmentation**
+
+---
+
+## ⚙️ Technologie
+
+### Backend
+
+* **NestJS microservices**
+* **FastAPI AI services**
+* **GraphQL Gateway**
+* **Redis / Kafka / NATS**
+* **PostgreSQL + TimescaleDB**
+* **Meilisearch**
+* **Redis Vectorstore**
+
+### AI/ML
+
+* **LangChain + LangGraph**
+* **PyTorch / LightGBM / XGBoost**
+* **TimeGPT**
+* **FAISS / Pinecone**
+
+### Frontend
+
+* **Next.js 15 (RSC)**
+* **React Native**
+
+### Infra
+
+* **Kubernetes + Istio**
+* **ArgoCD + GitHub Actions**
+* **Prometheus + Grafana + Loki**
+* **MinIO**
+
+---
+
+## 📡 API Endpoints
+
+Najważniejsze endpoints (pełne w `/openapi/health-profile.yaml`):
+
+* `GET /users/{id}/profile`
+* `PUT /users/{id}/medical-profile`
+* `GET /users/{id}/biomarkers`
+* `POST /users/{id}/biomarkers`
+* `GET /users/{id}/biomarkers/interpretation`
+* `GET /users/{id}/devices`
+* `POST /users/{id}/devices/sync`
+* `GET /users/{id}/health-twin`
+* `POST /users/{id}/health-twin`
+* `GET /users/{id}/recommendations`
+
+---
+
+## 🧪 Development
+
+### Start lokalny
+
+```bash
+make up
+make open
+```
+
+### Testy
+
+```bash
+make test
+```
+
+### Formatowanie
+
+```bash
+make fmt
+```
+
+### Deploy do K8s
+
+```bash
+make helm-deploy
+```
+
+---
+
+## 🔒 Security
+
+* Keycloak SSO
+* JWT + RPT
+* mTLS (Istio)
+* GDPR compliant
+* Data encryption at rest & in transit
+* Zero-trust microservices
+
+---
+
+## 📈 Roadmap
+
+### Phase 1 — Health Cloud MVP (DONE)
+
+✔ Health Profile
+✔ Biomarkers Engine
+✔ Wearables Sync
+✔ Health Twin v1
+✔ Supplements Recommender v1
+
+### Phase 2 — Predictive Intelligence (Active)
+
+⬜ Time-series forecasting (TimeGPT)
+⬜ Multi-agent LangGraph
+⬜ Full anomaly detection pipeline
+⬜ Mental state model
+
+### Phase 3 — SuperApp Harmonia (Q3–Q4)
+
+⬜ Genetic module
+⬜ Biofeedback streaming
+⬜ Smart environment twin
+⬜ Global wellness community features
+
+---
+
+## 🤝 Contributing
+
+Pull Requests mile widziane!
+Zasady: czysty kod, testy, czytelne commit messages.
+
+---
+
+## 📄 Licencja
+
+Copyright © 2025
+**Harmonia 360° / 3 Filary Zdrowia**
+
+---
+
+## 💌 Kontakt
+
+* **Founder & CTO:** Zbyszek Matracki & Sara Matracka
+* **E-mail:** [kontakt@3filaryzdrowia.pl](mailto:kontakt@3filaryzdrowia.pl)
+* **Strona:** [https://3filaryzdrowia.pl](https://3filaryzdrowia.pl)
+
+---
+
+Jeśli chcesz, mogę od razu:
+
+🔥 wygenerować **README.dev.md (instrukcje dla programistów)**
+🔥 dodać **diagramy ASCII / C4 / GraphViz**
+🔥 dodać **logo i bannery** do README
+🔥 stworzyć pełny **CONTRIBUTING.md**
