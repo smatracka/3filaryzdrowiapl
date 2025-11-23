@@ -292,12 +292,3 @@ Copyright © 2025
 * **Founder & CTO:** Zbyszek Matracki & Sara Matracka
 * **E-mail:** [kontakt@3filaryzdrowia.pl](mailto:kontakt@3filaryzdrowia.pl)
 * **Strona:** [https://3filaryzdrowia.pl](https://3filaryzdrowia.pl)
-
----
-
-Jeśli chcesz, mogę od razu:
-
-🔥 wygenerować **README.dev.md (instrukcje dla programistów)**
-🔥 dodać **diagramy ASCII / C4 / GraphViz**
-🔥 dodać **logo i bannery** do README
-🔥 stworzyć pełny **CONTRIBUTING.md**
