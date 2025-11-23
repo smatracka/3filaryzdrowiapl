@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  phone        String?
+  passwordHash String?
+  authProvider String?  @default("local") // local, google, facebook
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  status       String   @default("active") // active, suspended, deleted
+
+  profile        UserProfile?
+  medicalProfile MedicalProfile?
+  addresses      Address[]
+
+  @@map("users_auth")
+}
+
+model UserProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  firstName String?
+  lastName  String?
+  birthDate DateTime?
+  gender    String?
+  heightCm  Float?
+  weightKg  Float?
+  activityLevel String?
+  
+  dietaryPreferences String[]
+  allergies          String[]
+  intolerances       String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users_profile")
+}
+
+model MedicalProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  
+  bloodType String?
+  
+  chronicConditions Json? 
+  surgeries         Json?
+  medications       Json?
+  supplements       Json?
+  familyHistory     String[]
+  
+  notes     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users_medical_profile")
+}
+
+model Address {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  type      String   @default("shipping") // shipping, billing
+  firstName String
+  lastName  String
+  street    String
+  city      String
+  postalCode String
+  country   String   @default("PL")
+  phone     String?
+  
+  isDefault Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users_addresses")
+}

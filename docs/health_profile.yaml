@@ -1,0 +1,1024 @@
+openapi: 3.1.0
+info:
+  title: Harmonia 360° Health Profile API
+  version: 1.0.0
+  description: |
+    Health Profile / AI Health Twin API for Harmonia 360° and 3filaryzdrowia.
+    Obsługuje:
+    - profil użytkownika,
+    - profil medyczny,
+    - biomarkery (lab + wearables),
+    - integracje z urządzeniami,
+    - ankiety zdrowia/psychometrii,
+    - Health Twin,
+    - rekomendacje AI.
+
+servers:
+  - url: https://api.harmonia.local
+    description: Local / dev
+  - url: https://api.harmonia360.com
+    description: Production
+
+tags:
+  - name: UserProfile
+    description: Dane profilu użytkownika
+  - name: MedicalProfile
+    description: Historia medyczna, choroby, leki
+  - name: Biomarkers
+    description: Biomarkery, wartości i interpretacja
+  - name: Wearables
+    description: Integracje z urządzeniami i metryki
+  - name: Lifestyle
+    description: Styl życia, sen, stres, nawyki
+  - name: Surveys
+    description: Kwestionariusze i ankiety
+  - name: HealthTwin
+    description: AI Health Twin i agregaty zdrowia
+  - name: Recommendations
+    description: Rekomendacje AI (suplementy, nawyki)
+  - name: Subscriptions
+    description: Plany/subskrypcje zdrowotne użytkownika
+
+paths:
+  /users/{userId}/profile:
+    get:
+      tags: [UserProfile]
+      summary: Pobierz profil użytkownika
+      operationId: getUserProfile
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Profil użytkownika
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [UserProfile]
+      summary: Zaktualizuj profil użytkownika
+      operationId: updateUserProfile
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+      responses:
+        '200':
+          description: Zaktualizowany profil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /users/{userId}/medical-profile:
+    get:
+      tags: [MedicalProfile]
+      summary: Pobierz medyczny profil użytkownika
+      operationId: getMedicalProfile
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Profil medyczny
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalProfile'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [MedicalProfile]
+      summary: Zaktualizuj medyczny profil użytkownika
+      operationId: updateMedicalProfile
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicalProfileUpdate'
+      responses:
+        '200':
+          description: Zaktualizowany profil medyczny
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalProfile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /biomarkers/meta:
+    get:
+      tags: [Biomarkers]
+      summary: Lista metadanych biomarkerów
+      operationId: listBiomarkerMeta
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filtr wg kategorii (np. morfologia, lipidogram, hormony)
+      responses:
+        '200':
+          description: Lista metadanych biomarkerów
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BiomarkerMeta'
+
+  /biomarkers/meta/{biomarkerId}:
+    get:
+      tags: [Biomarkers]
+      summary: Pobierz metadane konkretnego biomarkera
+      operationId: getBiomarkerMeta
+      parameters:
+        - in: path
+          name: biomarkerId
+          required: true
+          schema:
+            type: string
+          description: ID biomarkera (zgodne z biomarker_meta.yaml)
+      responses:
+        '200':
+          description: Metadane biomarkera
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BiomarkerMeta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{userId}/biomarkers:
+    get:
+      tags: [Biomarkers]
+      summary: Pobierz wartości biomarkerów użytkownika
+      operationId: listUserBiomarkers
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: query
+          name: category
+          schema:
+            type: string
+          description: Filtr wg kategorii biomarkerów
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Lista wartości biomarkerów
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BiomarkerValue'
+    post:
+      tags: [Biomarkers]
+      summary: Zapisz nowe wartości biomarkerów użytkownika
+      operationId: createBiomarkerValues
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/BiomarkerValueCreate'
+      responses:
+        '201':
+          description: Utworzone wpisy biomarkerów
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BiomarkerValue'
+
+  /users/{userId}/biomarkers/{biomarkerId}:
+    get:
+      tags: [Biomarkers]
+      summary: Historia pomiarów danego biomarkera
+      operationId: getBiomarkerHistory
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: path
+          name: biomarkerId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista wartości biomarkera
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BiomarkerValue'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /users/{userId}/biomarkers/interpretation:
+    get:
+      tags: [Biomarkers, HealthTwin]
+      summary: Zinterpretuj zestaw biomarkerów użytkownika
+      operationId: interpretBiomarkers
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: query
+          name: snapshotAt
+          schema:
+            type: string
+            format: date-time
+          description: |
+            Punkt w czasie dla interpretacji.
+            Jeśli pominięty – użyj najnowszych wartości.
+      responses:
+        '200':
+          description: Interpretacja biomarkerów
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BiomarkerInterpretation'
+
+  /users/{userId}/devices:
+    get:
+      tags: [Wearables]
+      summary: Lista podłączonych urządzeń/wearables
+      operationId: listUserDevices
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Lista urządzeń
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceConnection'
+    post:
+      tags: [Wearables]
+      summary: Zarejestruj/połącz nowe urządzenie
+      operationId: connectDevice
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceConnectionCreate'
+      responses:
+        '201':
+          description: Utworzone połączenie urządzenia
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceConnection'
+
+  /users/{userId}/devices/{deviceId}:
+    delete:
+      tags: [Wearables]
+      summary: Odłącz urządzenie
+      operationId: disconnectDevice
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: path
+          name: deviceId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Urządzenie odłączone
+
+  /users/{userId}/devices/{deviceId}/sync:
+    post:
+      tags: [Wearables]
+      summary: Wymuś synchronizację danych z urządzenia
+      operationId: syncDevice
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: path
+          name: deviceId
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Synchronizacja przyjęta do przetworzenia
+
+  /users/{userId}/wearables/metrics:
+    get:
+      tags: [Wearables]
+      summary: Pobierz znormalizowane metryki z wearables
+      operationId: listWearableMetrics
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [steps, heart_rate, sleep, stress, hrv, spo2, body_temp]
+        - in: query
+          name: from
+          schema:
+            type: string
+            format: date-time
+        - in: query
+          name: to
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Lista metryk
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WearableMetric'
+
+  /users/{userId}/lifestyle:
+    get:
+      tags: [Lifestyle]
+      summary: Pobierz dane stylu życia
+      operationId: getLifestyle
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Lifestyle użytkownika
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lifestyle'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Lifestyle]
+      summary: Zaktualizuj dane stylu życia
+      operationId: updateLifestyle
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifestyleUpdate'
+      responses:
+        '200':
+          description: Zaktualizowany lifestyle
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lifestyle'
+
+  /users/{userId}/surveys:
+    get:
+      tags: [Surveys]
+      summary: Lista wypełnionych kwestionariuszy
+      operationId: listSurveys
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: query
+          name: surveyType
+          schema:
+            type: string
+            description: Np. BDI, GAD7, PSQI, PSS10
+      responses:
+        '200':
+          description: Lista wyników ankiet
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Survey'
+    post:
+      tags: [Surveys]
+      summary: Zapisz wynik kwestionariusza
+      operationId: createSurvey
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SurveyCreate'
+      responses:
+        '201':
+          description: Zapisany wynik ankiety
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Survey'
+
+  /users/{userId}/health-twin:
+    get:
+      tags: [HealthTwin]
+      summary: Pobierz aktualny Health Twin użytkownika
+      operationId: getHealthTwin
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Health Twin użytkownika
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthTwin'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags: [HealthTwin]
+      summary: Wygeneruj/odśwież Health Twin na podstawie aktualnych danych
+      operationId: generateHealthTwin
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '202':
+          description: Generowanie Health Twin przyjęte
+
+  /users/{userId}/status:
+    get:
+      tags: [HealthTwin]
+      summary: Zwraca syntetyczny status zdrowia (kolory + wskaźniki)
+      operationId: getUserHealthStatus
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Status zdrowotny (ciało/umysł/dusza)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /users/{userId}/recommendations:
+    get:
+      tags: [Recommendations]
+      summary: Pobierz aktualne rekomendacje AI
+      operationId: listRecommendations
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - in: query
+          name: type
+          schema:
+            type: string
+            enum: [supplement, lifestyle, practice, environment]
+      responses:
+        '200':
+          description: Lista rekomendacji
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recommendation'
+
+  /users/{userId}/subscriptions:
+    get:
+      tags: [Subscriptions]
+      summary: Lista subskrypcji zdrowotnych użytkownika
+      operationId: listUserSubscriptions
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Subskrypcje użytkownika
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSubscription'
+
+components:
+  parameters:
+    UserId:
+      in: path
+      name: userId
+      required: true
+      schema:
+        type: string
+      description: ID użytkownika
+
+  responses:
+    NotFound:
+      description: Resource not found
+    BadRequest:
+      description: Bad request
+
+  schemas:
+    UserProfile:
+      type: object
+      properties:
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [male, female, other, prefer_not_to_say]
+        heightCm:
+          type: number
+        weightKg:
+          type: number
+        dietaryPreferences:
+          type: array
+          items:
+            type: string
+        allergies:
+          type: array
+          items:
+            type: string
+        intolerances:
+          type: array
+          items:
+            type: string
+        lifestyle:
+          $ref: '#/components/schemas/Lifestyle'
+      required: [userId]
+
+    UserProfileUpdate:
+      allOf:
+        - $ref: '#/components/schemas/UserProfile'
+      required: []
+
+    MedicalProfile:
+      type: object
+      properties:
+        userId:
+          type: string
+        bloodType:
+          type: string
+        chronicConditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicalCondition'
+        surgeries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Surgery'
+        medications:
+          type: array
+          items:
+            $ref: '#/components/schemas/MedicationEntry'
+        supplements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplementEntry'
+        familyHistory:
+          type: array
+          items:
+            type: string
+        notes:
+          type: string
+      required: [userId]
+
+    MedicalProfileUpdate:
+      allOf:
+        - $ref: '#/components/schemas/MedicalProfile'
+      required: []
+
+    MedicalCondition:
+      type: object
+      properties:
+        name:
+          type: string
+        diagnosedAt:
+          type: string
+          format: date
+          nullable: true
+        severity:
+          type: string
+          enum: [low, moderate, high]
+        status:
+          type: string
+          enum: [active, resolved]
+
+    Surgery:
+      type: object
+      properties:
+        name:
+          type: string
+        date:
+          type: string
+          format: date
+        notes:
+          type: string
+
+    MedicationEntry:
+      type: object
+      properties:
+        name:
+          type: string
+        dose:
+          type: string
+        frequency:
+          type: string
+        since:
+          type: string
+          format: date
+          nullable: true
+        prescribedBy:
+          type: string
+
+    SupplementEntry:
+      type: object
+      properties:
+        name:
+          type: string
+        dose:
+          type: string
+        frequency:
+          type: string
+        since:
+          type: string
+          format: date
+          nullable: true
+
+    BiomarkerMeta:
+      type: object
+      description: Definicja biomarkera pochodząca z biomarker_meta.yaml
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        unit:
+          type: string
+        normalMale:
+          $ref: '#/components/schemas/Range'
+        normalFemale:
+          $ref: '#/components/schemas/Range'
+        fasting:
+          type: boolean
+        testType:
+          type: string
+        description:
+          type: string
+        significance:
+          type: string
+      required: [id, name, category, unit]
+
+    Range:
+      type: object
+      properties:
+        min:
+          type: number
+        max:
+          type: number
+
+    BiomarkerValue:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        biomarkerId:
+          type: string
+        value:
+          type: number
+        unit:
+          type: string
+        source:
+          type: string
+          enum: [lab_pdf, manual, device, wearable, oligoscan]
+        measuredAt:
+          type: string
+          format: date-time
+        sexAtTest:
+          type: string
+          nullable: true
+        context:
+          type: object
+          description: Dodatkowy kontekst (na czczo, faza cyklu itd.)
+      required: [userId, biomarkerId, value, measuredAt]
+
+    BiomarkerValueCreate:
+      allOf:
+        - $ref: '#/components/schemas/BiomarkerValue'
+      required: [biomarkerId, value, measuredAt]
+
+    BiomarkerInterpretation:
+      type: object
+      description: Zsyntetyzowana interpretacja biomarkerów
+      properties:
+        userId:
+          type: string
+        snapshotAt:
+          type: string
+          format: date-time
+        summary:
+          type: string
+        markers:
+          type: array
+          items:
+            $ref: '#/components/schemas/BiomarkerInterpretationItem'
+        riskScores:
+          type: object
+          additionalProperties:
+            type: number
+        recommendations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Recommendation'
+
+    BiomarkerInterpretationItem:
+      type: object
+      properties:
+        biomarkerId:
+          type: string
+        value:
+          type: number
+        unit:
+          type: string
+        status:
+          type: string
+          enum: [low, optimal, high, borderline]
+        color:
+          type: string
+          enum: [green, yellow, red, blue]
+        message:
+          type: string
+
+    DeviceConnection:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        provider:
+          type: string
+          enum:
+            - apple_health
+            - garmin
+            - fitbit
+            - oura
+            - samsung_health
+            - withings
+        scopes:
+          type: array
+          items:
+            type: string
+        lastSyncedAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    DeviceConnectionCreate:
+      type: object
+      properties:
+        provider:
+          type: string
+        authCode:
+          type: string
+          description: Kod autoryzacyjny/OAuth
+      required: [provider, authCode]
+
+    WearableMetric:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        type:
+          type: string
+          enum: [steps, heart_rate, sleep, stress, hrv, spo2, body_temp]
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
+        source:
+          type: string
+
+    Lifestyle:
+      type: object
+      properties:
+        userId:
+          type: string
+        sleepHours:
+          type: number
+        sleepQuality:
+          type: number
+          description: Skala 1-10
+        stressLevel:
+          type: number
+          description: Skala 1-10
+        alcoholIntake:
+          type: string
+        caffeineIntake:
+          type: string
+        trainingLoad:
+          type: string
+        hydrationLevel:
+          type: string
+      required: [userId]
+
+    LifestyleUpdate:
+      allOf:
+        - $ref: '#/components/schemas/Lifestyle'
+      required: []
+
+    Survey:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        surveyType:
+          type: string
+        score:
+          type: number
+        rawAnswers:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+
+    SurveyCreate:
+      type: object
+      properties:
+        surveyType:
+          type: string
+        score:
+          type: number
+        rawAnswers:
+          type: object
+      required: [surveyType, score]
+
+    HealthTwin:
+      type: object
+      properties:
+        userId:
+          type: string
+        generatedAt:
+          type: string
+          format: date-time
+        biologicalAge:
+          type: number
+        inflammationScore:
+          type: number
+        cardiovascularRiskScore:
+          type: number
+        metabolicScore:
+          type: number
+        hormonalBalanceScore:
+          type: number
+        stressScore:
+          type: number
+        sleepScore:
+          type: number
+        recoveryScore:
+          type: number
+        gutHealthScore:
+          type: number
+        detoxScore:
+          type: number
+        anomaliesDetected:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnomalyReport'
+        supplementsSuggested:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupplementSuggestion'
+
+    AnomalyReport:
+      type: object
+      properties:
+        id:
+          type: string
+        domain:
+          type: string
+          description: Np. cardio, metabolic, hormones
+        message:
+          type: string
+        severity:
+          type: string
+          enum: [low, moderate, high]
+
+    SupplementSuggestion:
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        rationale:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high]
+        score:
+          type: number
+
+    HealthStatus:
+      type: object
+      properties:
+        userId:
+          type: string
+        snapshotAt:
+          type: string
+          format: date-time
+        bodyScore:
+          type: number
+        mindScore:
+          type: number
+        soulScore:
+          type: number
+        overallScore:
+          type: number
+        color:
+          type: string
+          enum: [green, yellow, red]
+        summary:
+          type: string
+
+    Recommendation:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        type:
+          type: string
+          enum: [supplement, lifestyle, practice, environment]
+        title:
+          type: string
+        description:
+          type: string
+        rationale:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        confidence:
+          type: number
+        productId:
+          type: string
+          nullable: true
+        validUntil:
+          type: string
+          format: date-time
+          nullable: true
+
+    UserSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        planId:
+          type: string
+        status:
+          type: string
+          enum: [active, paused, cancelled]
+        cycle:
+          type: string
+          enum: [monthly, quarterly, yearly]
+        nextBillingDate:
+          type: string
+          format: date
+        aiOptimized:
+          type: boolean
