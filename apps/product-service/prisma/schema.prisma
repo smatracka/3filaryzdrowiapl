@@ -45,6 +45,13 @@ model StoreCategory {
   
   products  StoreProduct[]
 
+  // Content & SEO
+  description      String?
+  seoTitle         String?
+  seoDescription   String?
+  seoKeywords      String?
+  canonicalUrl     String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

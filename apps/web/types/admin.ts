@@ -1,7 +1,7 @@
 // Admin types based on Prisma schema from product_info.md
 
 export type ProductType = 'SIMPLE' | 'VARIANT' | 'BUNDLE' | 'SERVICE';
-export type ProductStatus = 'ACTIVE' | 'DRAFT' | 'ARCHIVED';
+export type ProductStatus = 'active' | 'draft' | 'archived';
 export type ChannelType = 'SHOP' | 'ALLEGRO' | 'ERLI' | 'AMAZON' | 'GMC';
 export type WorkflowStatus = 'DRAFT' | 'REVIEW' | 'APPROVED';
 
@@ -89,42 +89,45 @@ export interface Media {
 }
 
 export interface PriceInfo {
-    id: string;
-    retailPrice: number;
-    suggestedPromoPrice?: number;
+    retailPrice: string;
+    suggestedPromoPrice: string;
     currency: string;
 }
 
 export interface Logistics {
-    id: string;
-    weight: number;
-    height: number;
-    width: number;
-    depth: number;
-    hsCode?: string;
+    weight: string;
+    height: string;
+    width: string;
+    depth: string;
     deliveryTime: string;
+}
+
+export interface ChannelData {
+    shop: ChannelContent;
+    allegro: ChannelContent;
+    erli: ChannelContent;
+    amazon: ChannelContent;
+    gmc: ChannelContent;
 }
 
 export interface Category {
     id: string;
     name: string;
     slug: string;
-    description?: string;
-    parentId?: string;
-    parent?: Category;
+    parentId?: string | null;
+    level?: number; // Frontend helper
     children?: Category[];
-    level: number;
-    order: number;
-    isActive: boolean;
-    productCount: number;
+    _count?: {
+        products: number;
+    };
 
-    // SEO
+    description?: string;
     seoTitle?: string;
-    metaDescription?: string;
-
-    // Media
-    image?: string;
-    icon?: string;
+    seoDescription?: string;
+    seoKeywords?: string;
+    socialTitle?: string;
+    socialDescription?: string;
+    canonicalUrl?: string;
 
     createdAt: Date;
     updatedAt: Date;

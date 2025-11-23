@@ -1,132 +1,43 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Button } from '@/components/ui';
 import Link from 'next/link';
 import type { Category } from '@/types/admin';
 
-// Mock hierarchical category data
-const mockCategories: Category[] = [
-    {
-        id: '1',
-        name: 'Suplementy',
-        slug: 'suplementy',
-        description: 'Suplementy diety',
-        level: 0,
-        order: 1,
-        isActive: true,
-        productCount: 156,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-11-20'),
-        children: [
-            {
-                id: '2',
-                name: 'Witaminy',
-                slug: 'witaminy',
-                parentId: '1',
-                level: 1,
-                order: 1,
-                isActive: true,
-                productCount: 45,
-                createdAt: new Date('2024-01-01'),
-                updatedAt: new Date('2024-11-20'),
-                children: [
-                    {
-                        id: '3',
-                        name: 'Witamina D',
-                        slug: 'witamina-d',
-                        parentId: '2',
-                        level: 2,
-                        order: 1,
-                        isActive: true,
-                        productCount: 12,
-                        createdAt: new Date('2024-01-01'),
-                        updatedAt: new Date('2024-11-20'),
-                    },
-                    {
-                        id: '4',
-                        name: 'Witamina C',
-                        slug: 'witamina-c',
-                        parentId: '2',
-                        level: 2,
-                        order: 2,
-                        isActive: true,
-                        productCount: 15,
-                        createdAt: new Date('2024-01-01'),
-                        updatedAt: new Date('2024-11-20'),
-                    },
-                ],
-            },
-            {
-                id: '5',
-                name: 'Minerały',
-                slug: 'mineraly',
-                parentId: '1',
-                level: 1,
-                order: 2,
-                isActive: true,
-                productCount: 38,
-                createdAt: new Date('2024-01-01'),
-                updatedAt: new Date('2024-11-20'),
-                children: [
-                    {
-                        id: '6',
-                        name: 'Magnez',
-                        slug: 'magnez',
-                        parentId: '5',
-                        level: 2,
-                        order: 1,
-                        isActive: true,
-                        productCount: 18,
-                        createdAt: new Date('2024-01-01'),
-                        updatedAt: new Date('2024-11-20'),
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        id: '7',
-        name: 'Kosmetyki',
-        slug: 'kosmetyki',
-        description: 'Kosmetyki naturalne',
-        level: 0,
-        order: 2,
-        isActive: true,
-        productCount: 67,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-11-20'),
-        children: [
-            {
-                id: '8',
-                name: 'Pielęgnacja twarzy',
-                slug: 'pielegnacja-twarzy',
-                parentId: '7',
-                level: 1,
-                order: 1,
-                isActive: true,
-                productCount: 34,
-                createdAt: new Date('2024-01-01'),
-                updatedAt: new Date('2024-11-20'),
-            },
-        ],
-    },
-    {
-        id: '9',
-        name: 'Zdrowa żywność',
-        slug: 'zdrowa-zywnosc',
-        level: 0,
-        order: 3,
-        isActive: false,
-        productCount: 24,
-        createdAt: new Date('2024-01-01'),
-        updatedAt: new Date('2024-11-20'),
-    },
-];
-
 export default function CategoriesPage() {
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(true);
     const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set(['1', '2', '5', '7']));
     const [searchQuery, setSearchQuery] = useState('');
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch('http://localhost:3001/categories');
+                const data = await res.json();
+
+                // Add level property recursively
+                const addLevel = (cats: any[], level = 0): Category[] => {
+                    return cats.map(cat => ({
+                        ...cat,
+                        level,
+                        isActive: true, // Default for now
+                        order: 0, // Default for now
+                        children: cat.children ? addLevel(cat.children, level + 1) : []
+                    }));
+                };
+
+                setCategories(addLevel(data));
+            } catch (error) {
+                console.error('Failed to fetch categories:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     const toggleExpand = (id: string) => {
         const newExpanded = new Set(expandedIds);
@@ -210,9 +121,13 @@ export default function CategoriesPage() {
         return result;
     };
 
-    const allCategories = flattenCategories(mockCategories);
+    const allCategories = flattenCategories(categories);
     const totalCount = allCategories.length;
     const activeCount = allCategories.filter((c) => c.isActive).length;
+
+    if (loading) {
+        return <div className="p-8">Ładowanie...</div>;
+    }
 
     return (
         <div className="p-8">
@@ -280,7 +195,7 @@ export default function CategoriesPage() {
                         </div>
                     </div>
                     <div>
-                        {mockCategories.map((category) => renderCategory(category))}
+                        {categories.map((category) => renderCategory(category))}
                     </div>
                 </CardContent>
             </Card>

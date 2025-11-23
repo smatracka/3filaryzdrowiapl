@@ -1,0 +1,363 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER PROFILES
+// ============================================
+
+model UserProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique // Reference to auth user
+  
+  // Basic Info
+  firstName String?
+  lastName  String?
+  birthDate DateTime?
+  gender    Gender?
+  
+  // Physical
+  heightCm  Float?
+  weightKg  Float?
+  
+  // Preferences
+  activityLevel      ActivityLevel?
+  dietaryPreferences String[]
+  allergies          String[]
+  intolerances       String[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  medicalProfile MedicalProfile?
+  lifestyle      Lifestyle?
+  biomarkers     BiomarkerValue[]
+  assessments    HealthAssessment[]
+  surveys        Survey[]
+  recommendations Recommendation[]
+  devices        DeviceConnection[]
+  
+  @@map("user_profiles")
+}
+
+enum Gender {
+  male
+  female
+  other
+  prefer_not_to_say
+}
+
+enum ActivityLevel {
+  sedentary
+  lightly_active
+  moderately_active
+  very_active
+  extremely_active
+}
+
+// ============================================
+// MEDICAL PROFILE
+// ============================================
+
+model MedicalProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  profile   UserProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  
+  bloodType String?
+  
+  // Medical History
+  chronicConditions Json[] // {name, diagnosedAt, severity, status}
+  surgeries         Json[] // {name, date, notes}
+  medications       Json[] // {name, dose, frequency, since, prescribedBy}
+  supplements       Json[] // {name, dose, frequency, since}
+  familyHistory     String[]
+  
+  notes String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("medical_profiles")
+}
+
+// ============================================
+// LIFESTYLE
+// ============================================
+
+model Lifestyle {
+  id     String      @id @default(uuid())
+  userId String      @unique
+  profile UserProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  
+  sleepHours         Float?
+  sleepQuality       Int? // 1-10
+  stressLevel        Int? // 1-10
+  alcoholIntake      AlcoholIntake?
+  caffeineIntake     CaffeineIntake?
+  smokingStatus      SmokingStatus?
+  trainingLoad       TrainingLoad?
+  hydrationLevel     Int? // glasses per day
+  mindfulnessMinutes Int? // minutes per day
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("lifestyle")
+}
+
+enum AlcoholIntake {
+  none
+  occasional
+  moderate
+  heavy
+}
+
+enum CaffeineIntake {
+  none
+  low // 1-2 cups
+  moderate // 3-4 cups
+  high // 5+ cups
+}
+
+enum SmokingStatus {
+  never
+  former
+  current
+}
+
+enum TrainingLoad {
+  none
+  light
+  moderate
+  intense
+  athlete
+}
+
+// ============================================
+// BIOMARKERS
+// ============================================
+
+model BiomarkerMeta {
+  id          String  @id // e.g. "wbc", "ldl", "vitamin_d3"
+  name        String
+  category    String // morfologia, lipidogram, hormony, witaminy
+  unit        String
+  
+  // Normal ranges
+  normalMale   Json? // {min, max}
+  normalFemale Json? // {min, max}
+  
+  fasting     Boolean @default(false)
+  testType    String? // blood, urine, saliva
+  description String?
+  significance String?
+  
+  values BiomarkerValue[]
+  
+  @@map("biomarker_meta")
+}
+
+model BiomarkerValue {
+  id           String   @id @default(uuid())
+  userId       String
+  profile      UserProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  
+  biomarkerId  String
+  biomarker    BiomarkerMeta @relation(fields: [biomarkerId], references: [id])
+  
+  value        Float
+  unit         String
+  source       BiomarkerSource
+  measuredAt   DateTime
+  sexAtTest    Gender?
+  context      Json? // {fasting, menstrualPhase, illness, etc}
+  
+  createdAt    DateTime @default(now())
+  
+  @@map("biomarker_values")
+  @@index([userId, biomarkerId])
+  @@index([measuredAt])
+}
+
+enum BiomarkerSource {
+  lab_pdf
+  manual
+  device
+  wearable
+  oligoscan
+}
+
+// ============================================
+// HEALTH ASSESSMENTS (QUIZ)
+// ============================================
+
+model HealthAssessment {
+  id        String   @id @default(uuid())
+  userId    String
+  profile   UserProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  
+  type      String // "harmonia_360", "quick_check"
+  answers   Json // Full quiz answers
+  score     Int?
+  
+  // Computed from answers
+  healthGoals String[] // weight_loss, energy, sleep, stress, immunity
+  concerns    String[] // fatigue, pain, digestion, mood
+  
+  completedAt DateTime @default(now())
+  
+  @@map("health_assessments")
+  @@index([userId])
+}
+
+// ============================================
+// SURVEYS (PSYCHOMETRIC)
+// ============================================
+
+model Survey {
+  id         String   @id @default(uuid())
+  userId     String
+  profile    UserProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  
+  surveyType SurveyType
+  score      Int
+  answers    Json?
+  
+  timestamp  DateTime @default(now())
+  
+  @@map("surveys")
+  @@index([userId, surveyType])
+}
+
+enum SurveyType {
+  BDI // Beck Depression Inventory
+  GAD7 // Generalized Anxiety Disorder
+  PSQI // Pittsburgh Sleep Quality Index
+  PSS10 // Perceived Stress Scale
+  MAAS // Mindful Attention Awareness Scale
+  MBI // Maslach Burnout Inventory
+  PHQ9 // Patient Health Questionnaire
+}
+
+// ============================================
+// RECOMMENDATIONS
+// ============================================
+
+model Recommendation {
+  id         String   @id @default(uuid())
+  userId     String
+  profile    UserProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  
+  type       RecommendationType
+  title      String
+  rationale  String
+  score      Float // 0-1 confidence
+  
+  // Product recommendations
+  productIds String[] // References to Product Service
+  
+  // Lifestyle recommendations
+  actionItems Json[] // {action, frequency, duration}
+  
+  // Metadata
+  basedOn    Json // {biomarkers: [], surveys: [], goals: []}
+  expiresAt  DateTime?
+  
+  // User feedback
+  feedback   RecommendationFeedback?
+  
+  createdAt  DateTime @default(now())
+  
+  @@map("recommendations")
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+enum RecommendationType {
+  supplement
+  lifestyle
+  practice
+  environment
+  food
+}
+
+model RecommendationFeedback {
+  id               String   @id @default(uuid())
+  recommendationId String   @unique
+  recommendation   Recommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  
+  helpful    Boolean
+  purchased  Boolean @default(false)
+  comment    String?
+  
+  createdAt  DateTime @default(now())
+  
+  @@map("recommendation_feedback")
+}
+
+// ============================================
+// WEARABLES (Optional for v1)
+// ============================================
+
+model DeviceConnection {
+  id            String   @id @default(uuid())
+  userId        String
+  profile       UserProfile @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  
+  provider      WearableProvider
+  accessToken   String?
+  refreshToken  String?
+  scopes        String[]
+  lastSyncedAt  DateTime?
+  
+  metrics       WearableMetric[]
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("device_connections")
+  @@index([userId])
+}
+
+enum WearableProvider {
+  apple_health
+  garmin
+  fitbit
+  oura
+  samsung_health
+  withings
+}
+
+model WearableMetric {
+  id        String   @id @default(uuid())
+  deviceId  String
+  device    DeviceConnection @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  
+  type      WearableMetricType
+  timestamp DateTime
+  value     Float
+  unit      String?
+  rawPayload Json?
+  
+  @@map("wearable_metrics")
+  @@index([deviceId, type, timestamp])
+}
+
+enum WearableMetricType {
+  steps
+  heart_rate
+  sleep_stage
+  hrv
+  spo2
+  stress
+  body_temp
+  calories
+  distance
+}

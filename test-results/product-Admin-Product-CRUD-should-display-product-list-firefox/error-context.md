@@ -1,0 +1,150 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - heading "Admin Panel" [level=1] [ref=e5]
+        - navigation [ref=e6]:
+          - link "📊 Dashboard" [ref=e7] [cursor=pointer]:
+            - /url: /admin
+            - generic [ref=e8]: 📊
+            - generic [ref=e9]: Dashboard
+          - link "📦 Produkty" [ref=e10] [cursor=pointer]:
+            - /url: /admin/produkty
+            - generic [ref=e11]: 📦
+            - generic [ref=e12]: Produkty
+          - link "🏷️ Kategorie" [ref=e13] [cursor=pointer]:
+            - /url: /admin/kategorie
+            - generic [ref=e14]: 🏷️
+            - generic [ref=e15]: Kategorie
+          - link "⚙️ Atrybuty" [ref=e16] [cursor=pointer]:
+            - /url: /admin/atrybuty
+            - generic [ref=e17]: ⚙️
+            - generic [ref=e18]: Atrybuty
+          - link "📡 Kanały" [ref=e19] [cursor=pointer]:
+            - /url: /admin/kanaly
+            - generic [ref=e20]: 📡
+            - generic [ref=e21]: Kanały
+          - link "🧬 Biomarkery" [ref=e22] [cursor=pointer]:
+            - /url: /admin/biomarkery
+            - generic [ref=e23]: 🧬
+            - generic [ref=e24]: Biomarkery
+          - link "🔧 Ustawienia" [ref=e25] [cursor=pointer]:
+            - /url: /admin/ustawienia
+            - generic [ref=e26]: 🔧
+            - generic [ref=e27]: Ustawienia
+      - link "← Powrót do sklepu" [ref=e29] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e30]: ←
+        - generic [ref=e31]: Powrót do sklepu
+    - main [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - heading "Produkty" [level=1] [ref=e36]
+            - paragraph [ref=e37]: 5 produktów
+          - link "➕ Dodaj produkt" [ref=e38] [cursor=pointer]:
+            - /url: /admin/produkty/nowy
+            - button "➕ Dodaj produkt" [ref=e39]
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - generic [ref=e44]: Szukaj
+            - textbox "SKU, nazwa, marka..." [ref=e45]
+          - generic [ref=e46]:
+            - generic [ref=e47]: Status
+            - combobox [ref=e48]:
+              - option "Wszystkie (5)" [selected]
+              - option "Aktywne (3)"
+              - option "Wersje robocze (1)"
+              - option "Zarchiwizowane (1)"
+          - generic [ref=e49]:
+            - generic [ref=e50]: Typ
+            - combobox [ref=e51]:
+              - option "Wszystkie typy" [selected]
+              - option "Prosty"
+              - option "Wariantowy"
+              - option "Zestaw"
+              - option "Usługa"
+        - table [ref=e55]:
+          - rowgroup [ref=e56]:
+            - row "SKU Nazwa Marka Typ Status Ostatnia edycja Akcje" [ref=e57]:
+              - cell "SKU" [ref=e58]
+              - cell "Nazwa" [ref=e59]
+              - cell "Marka" [ref=e60]
+              - cell "Typ" [ref=e61]
+              - cell "Status" [ref=e62]
+              - cell "Ostatnia edycja" [ref=e63]
+              - cell "Akcje" [ref=e64]
+          - rowgroup [ref=e65]:
+            - 'row "VIT-D3-1000 Witamina D3 1000 IU EAN: 5901234567890 3 Filary Zdrowia SIMPLE ACTIVE 23.11.2024 Edytuj ⋮" [ref=e66]':
+              - cell "VIT-D3-1000" [ref=e67]
+              - 'cell "Witamina D3 1000 IU EAN: 5901234567890" [ref=e68]':
+                - generic [ref=e69]:
+                  - paragraph [ref=e70]: Witamina D3 1000 IU
+                  - paragraph [ref=e71]: "EAN: 5901234567890"
+              - cell "3 Filary Zdrowia" [ref=e72]
+              - cell "SIMPLE" [ref=e73]
+              - cell "ACTIVE" [ref=e74]
+              - cell "23.11.2024" [ref=e75]
+              - cell "Edytuj ⋮" [ref=e76]:
+                - link "Edytuj" [ref=e77] [cursor=pointer]:
+                  - /url: /admin/produkty/1
+                - button "⋮" [ref=e78]
+            - 'row "MAG-CIT-400 Magnez Cytrynian 400mg EAN: 5901234567891 3 Filary Zdrowia SIMPLE ACTIVE 22.11.2024 Edytuj ⋮" [ref=e79]':
+              - cell "MAG-CIT-400" [ref=e80]
+              - 'cell "Magnez Cytrynian 400mg EAN: 5901234567891" [ref=e81]':
+                - generic [ref=e82]:
+                  - paragraph [ref=e83]: Magnez Cytrynian 400mg
+                  - paragraph [ref=e84]: "EAN: 5901234567891"
+              - cell "3 Filary Zdrowia" [ref=e85]
+              - cell "SIMPLE" [ref=e86]
+              - cell "ACTIVE" [ref=e87]
+              - cell "22.11.2024" [ref=e88]
+              - cell "Edytuj ⋮" [ref=e89]:
+                - link "Edytuj" [ref=e90] [cursor=pointer]:
+                  - /url: /admin/produkty/2
+                - button "⋮" [ref=e91]
+            - row "OMEGA-3-1000 Omega-3 1000mg 3 Filary Zdrowia VARIANT DRAFT 21.11.2024 Edytuj ⋮" [ref=e92]:
+              - cell "OMEGA-3-1000" [ref=e93]
+              - cell "Omega-3 1000mg" [ref=e94]:
+                - paragraph [ref=e96]: Omega-3 1000mg
+              - cell "3 Filary Zdrowia" [ref=e97]
+              - cell "VARIANT" [ref=e98]
+              - cell "DRAFT" [ref=e99]
+              - cell "21.11.2024" [ref=e100]
+              - cell "Edytuj ⋮" [ref=e101]:
+                - link "Edytuj" [ref=e102] [cursor=pointer]:
+                  - /url: /admin/produkty/3
+                - button "⋮" [ref=e103]
+            - 'row "VIT-C-1000 Witamina C 1000mg EAN: 5901234567892 Premium Health SIMPLE ACTIVE 20.11.2024 Edytuj ⋮" [ref=e104]':
+              - cell "VIT-C-1000" [ref=e105]
+              - 'cell "Witamina C 1000mg EAN: 5901234567892" [ref=e106]':
+                - generic [ref=e107]:
+                  - paragraph [ref=e108]: Witamina C 1000mg
+                  - paragraph [ref=e109]: "EAN: 5901234567892"
+              - cell "Premium Health" [ref=e110]
+              - cell "SIMPLE" [ref=e111]
+              - cell "ACTIVE" [ref=e112]
+              - cell "20.11.2024" [ref=e113]
+              - cell "Edytuj ⋮" [ref=e114]:
+                - link "Edytuj" [ref=e115] [cursor=pointer]:
+                  - /url: /admin/produkty/4
+                - button "⋮" [ref=e116]
+            - row "PROBIO-MIX Probiotyk Mix 10 szczepów 3 Filary Zdrowia SIMPLE ARCHIVED 15.10.2024 Edytuj ⋮" [ref=e117]:
+              - cell "PROBIO-MIX" [ref=e118]
+              - cell "Probiotyk Mix 10 szczepów" [ref=e119]:
+                - paragraph [ref=e121]: Probiotyk Mix 10 szczepów
+              - cell "3 Filary Zdrowia" [ref=e122]
+              - cell "SIMPLE" [ref=e123]
+              - cell "ARCHIVED" [ref=e124]
+              - cell "15.10.2024" [ref=e125]
+              - cell "Edytuj ⋮" [ref=e126]:
+                - link "Edytuj" [ref=e127] [cursor=pointer]:
+                  - /url: /admin/produkty/5
+                - button "⋮" [ref=e128]
+  - button "Open Next.js Dev Tools" [ref=e134] [cursor=pointer]:
+    - img [ref=e135]
+  - alert [ref=e139]
+```

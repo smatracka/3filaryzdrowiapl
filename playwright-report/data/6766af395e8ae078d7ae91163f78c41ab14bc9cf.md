@@ -1,0 +1,198 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - heading "Admin Panel" [level=1] [ref=e5]
+        - navigation [ref=e6]:
+          - link "📊 Dashboard" [ref=e7] [cursor=pointer]:
+            - /url: /admin
+            - generic [ref=e8]: 📊
+            - generic [ref=e9]: Dashboard
+          - link "📦 Produkty" [ref=e10] [cursor=pointer]:
+            - /url: /admin/produkty
+            - generic [ref=e11]: 📦
+            - generic [ref=e12]: Produkty
+          - link "🏷️ Kategorie" [ref=e13] [cursor=pointer]:
+            - /url: /admin/kategorie
+            - generic [ref=e14]: 🏷️
+            - generic [ref=e15]: Kategorie
+          - link "⚙️ Atrybuty" [ref=e16] [cursor=pointer]:
+            - /url: /admin/atrybuty
+            - generic [ref=e17]: ⚙️
+            - generic [ref=e18]: Atrybuty
+          - link "📡 Kanały" [ref=e19] [cursor=pointer]:
+            - /url: /admin/kanaly
+            - generic [ref=e20]: 📡
+            - generic [ref=e21]: Kanały
+          - link "🧬 Biomarkery" [ref=e22] [cursor=pointer]:
+            - /url: /admin/biomarkery
+            - generic [ref=e23]: 🧬
+            - generic [ref=e24]: Biomarkery
+          - link "🔧 Ustawienia" [ref=e25] [cursor=pointer]:
+            - /url: /admin/ustawienia
+            - generic [ref=e26]: 🔧
+            - generic [ref=e27]: Ustawienia
+      - link "← Powrót do sklepu" [ref=e29] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e30]: ←
+        - generic [ref=e31]: Powrót do sklepu
+    - main [ref=e32]:
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - heading "Kategorie" [level=1] [ref=e36]
+            - paragraph [ref=e37]: 9 kategorii (8 aktywnych)
+          - link "➕ Dodaj kategorię" [ref=e38] [cursor=pointer]:
+            - /url: /admin/kategorie/nowa
+            - button "➕ Dodaj kategorię" [ref=e39]
+        - generic [ref=e40]:
+          - generic [ref=e42]:
+            - paragraph [ref=e43]: Wszystkie
+            - paragraph [ref=e44]: "9"
+          - generic [ref=e46]:
+            - paragraph [ref=e47]: Aktywne
+            - paragraph [ref=e48]: "8"
+          - generic [ref=e50]:
+            - paragraph [ref=e51]: Nieaktywne
+            - paragraph [ref=e52]: "1"
+          - generic [ref=e54]:
+            - paragraph [ref=e55]: Produkty
+            - paragraph [ref=e56]: "409"
+        - textbox "Szukaj kategorii..." [ref=e59]
+        - generic [ref=e61]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: Nazwa kategorii
+            - generic [ref=e65]: Produkty
+          - generic [ref=e66]:
+            - generic [ref=e67]:
+              - generic [ref=e68]:
+                - generic [ref=e69]:
+                  - button "▼" [ref=e70]
+                  - generic [ref=e71]:
+                    - link "Suplementy" [ref=e73] [cursor=pointer]:
+                      - /url: /admin/kategorie/1
+                    - paragraph [ref=e74]: /suplementy
+                - generic [ref=e75]:
+                  - generic [ref=e76]: 156 produktów
+                  - generic [ref=e77]:
+                    - link "Edytuj" [ref=e78] [cursor=pointer]:
+                      - /url: /admin/kategorie/1
+                      - button "Edytuj" [ref=e79]
+                    - button "⋮" [ref=e80]
+              - generic [ref=e81]:
+                - generic [ref=e82]:
+                  - generic [ref=e83]:
+                    - button "▼" [ref=e84]
+                    - generic [ref=e85]:
+                      - link "Witaminy" [ref=e87] [cursor=pointer]:
+                        - /url: /admin/kategorie/2
+                      - paragraph [ref=e88]: /witaminy
+                  - generic [ref=e89]:
+                    - generic [ref=e90]: 45 produktów
+                    - generic [ref=e91]:
+                      - link "Edytuj" [ref=e92] [cursor=pointer]:
+                        - /url: /admin/kategorie/2
+                        - button "Edytuj" [ref=e93]
+                      - button "⋮" [ref=e94]
+                - generic [ref=e96]:
+                  - generic [ref=e98]:
+                    - link "Witamina D" [ref=e100] [cursor=pointer]:
+                      - /url: /admin/kategorie/3
+                    - paragraph [ref=e101]: /witamina-d
+                  - generic [ref=e102]:
+                    - generic [ref=e103]: 12 produktów
+                    - generic [ref=e104]:
+                      - link "Edytuj" [ref=e105] [cursor=pointer]:
+                        - /url: /admin/kategorie/3
+                        - button "Edytuj" [ref=e106]
+                      - button "⋮" [ref=e107]
+                - generic [ref=e109]:
+                  - generic [ref=e111]:
+                    - link "Witamina C" [ref=e113] [cursor=pointer]:
+                      - /url: /admin/kategorie/4
+                    - paragraph [ref=e114]: /witamina-c
+                  - generic [ref=e115]:
+                    - generic [ref=e116]: 15 produktów
+                    - generic [ref=e117]:
+                      - link "Edytuj" [ref=e118] [cursor=pointer]:
+                        - /url: /admin/kategorie/4
+                        - button "Edytuj" [ref=e119]
+                      - button "⋮" [ref=e120]
+              - generic [ref=e121]:
+                - generic [ref=e122]:
+                  - generic [ref=e123]:
+                    - button "▼" [ref=e124]
+                    - generic [ref=e125]:
+                      - link "Minerały" [ref=e127] [cursor=pointer]:
+                        - /url: /admin/kategorie/5
+                      - paragraph [ref=e128]: /mineraly
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: 38 produktów
+                    - generic [ref=e131]:
+                      - link "Edytuj" [ref=e132] [cursor=pointer]:
+                        - /url: /admin/kategorie/5
+                        - button "Edytuj" [ref=e133]
+                      - button "⋮" [ref=e134]
+                - generic [ref=e136]:
+                  - generic [ref=e138]:
+                    - link "Magnez" [ref=e140] [cursor=pointer]:
+                      - /url: /admin/kategorie/6
+                    - paragraph [ref=e141]: /magnez
+                  - generic [ref=e142]:
+                    - generic [ref=e143]: 18 produktów
+                    - generic [ref=e144]:
+                      - link "Edytuj" [ref=e145] [cursor=pointer]:
+                        - /url: /admin/kategorie/6
+                        - button "Edytuj" [ref=e146]
+                      - button "⋮" [ref=e147]
+            - generic [ref=e148]:
+              - generic [ref=e149]:
+                - generic [ref=e150]:
+                  - button "▼" [ref=e151]
+                  - generic [ref=e152]:
+                    - link "Kosmetyki" [ref=e154] [cursor=pointer]:
+                      - /url: /admin/kategorie/7
+                    - paragraph [ref=e155]: /kosmetyki
+                - generic [ref=e156]:
+                  - generic [ref=e157]: 67 produktów
+                  - generic [ref=e158]:
+                    - link "Edytuj" [ref=e159] [cursor=pointer]:
+                      - /url: /admin/kategorie/7
+                      - button "Edytuj" [ref=e160]
+                    - button "⋮" [ref=e161]
+              - generic [ref=e163]:
+                - generic [ref=e165]:
+                  - link "Pielęgnacja twarzy" [ref=e167] [cursor=pointer]:
+                    - /url: /admin/kategorie/8
+                  - paragraph [ref=e168]: /pielegnacja-twarzy
+                - generic [ref=e169]:
+                  - generic [ref=e170]: 34 produktów
+                  - generic [ref=e171]:
+                    - link "Edytuj" [ref=e172] [cursor=pointer]:
+                      - /url: /admin/kategorie/8
+                      - button "Edytuj" [ref=e173]
+                    - button "⋮" [ref=e174]
+            - generic [ref=e176]:
+              - generic [ref=e178]:
+                - generic [ref=e179]:
+                  - link "Zdrowa żywność" [ref=e180] [cursor=pointer]:
+                    - /url: /admin/kategorie/9
+                  - generic [ref=e181]: Nieaktywna
+                - paragraph [ref=e182]: /zdrowa-zywnosc
+              - generic [ref=e183]:
+                - generic [ref=e184]: 24 produktów
+                - generic [ref=e185]:
+                  - link "Edytuj" [ref=e186] [cursor=pointer]:
+                    - /url: /admin/kategorie/9
+                    - button "Edytuj" [ref=e187]
+                  - button "⋮" [ref=e188]
+        - generic [ref=e189]:
+          - button "Rozwiń wszystkie" [ref=e190]
+          - button "Zwiń wszystkie" [ref=e191]
+  - button "Open Next.js Dev Tools" [ref=e197] [cursor=pointer]:
+    - img [ref=e198]
+  - alert [ref=e201]
+```

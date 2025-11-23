@@ -5,92 +5,60 @@ import { Card, CardContent, Button } from '@/components/ui';
 import Link from 'next/link';
 import type { Product, ProductStatus, ProductType } from '@/types/admin';
 
-// Mock data
-const mockProducts: Product[] = [
-    {
-        id: '1',
-        sku: 'VIT-D3-1000',
-        ean: '5901234567890',
-        brand: '3 Filary Zdrowia',
-        name: 'Witamina D3 1000 IU',
-        type: 'SIMPLE',
-        status: 'ACTIVE',
-        createdAt: new Date('2024-11-01'),
-        updatedAt: new Date('2024-11-23'),
-    },
-    {
-        id: '2',
-        sku: 'MAG-CIT-400',
-        ean: '5901234567891',
-        brand: '3 Filary Zdrowia',
-        name: 'Magnez Cytrynian 400mg',
-        type: 'SIMPLE',
-        status: 'ACTIVE',
-        createdAt: new Date('2024-10-15'),
-        updatedAt: new Date('2024-11-22'),
-    },
-    {
-        id: '3',
-        sku: 'OMEGA-3-1000',
-        brand: '3 Filary Zdrowia',
-        name: 'Omega-3 1000mg',
-        type: 'VARIANT',
-        status: 'DRAFT',
-        createdAt: new Date('2024-11-20'),
-        updatedAt: new Date('2024-11-21'),
-    },
-    {
-        id: '4',
-        sku: 'VIT-C-1000',
-        ean: '5901234567892',
-        brand: 'Premium Health',
-        name: 'Witamina C 1000mg',
-        type: 'SIMPLE',
-        status: 'ACTIVE',
-        createdAt: new Date('2024-09-10'),
-        updatedAt: new Date('2024-11-20'),
-    },
-    {
-        id: '5',
-        sku: 'PROBIO-MIX',
-        brand: '3 Filary Zdrowia',
-        name: 'Probiotyk Mix 10 szczepów',
-        type: 'SIMPLE',
-        status: 'ARCHIVED',
-        createdAt: new Date('2024-08-01'),
-        updatedAt: new Date('2024-10-15'),
-    },
-];
-
 export default function ProductsPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<ProductStatus | 'ALL'>('ALL');
     const [typeFilter, setTypeFilter] = useState<ProductType | 'ALL'>('ALL');
 
-    const filteredProducts = mockProducts.filter((product) => {
+    React.useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const res = await fetch('http://localhost:3002/products');
+                if (!res.ok) throw new Error('Failed to fetch products');
+                const response = await res.json();
+                // Product Service returns {data, total, skip, take}
+                setProducts(response.data || response);
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'An error occurred');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    const filteredProducts = products.filter((product) => {
         const matchesSearch =
             product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             product.sku.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.brand.toLowerCase().includes(searchQuery.toLowerCase());
+            (product.brand && product.brand.toLowerCase().includes(searchQuery.toLowerCase()));
 
         const matchesStatus = statusFilter === 'ALL' || product.status === statusFilter;
-        const matchesType = typeFilter === 'ALL' || product.type === typeFilter;
+        // const matchesType = typeFilter === 'ALL' || product.type === typeFilter; // Type is not yet populated in import
 
-        return matchesSearch && matchesStatus && matchesType;
+        return matchesSearch && matchesStatus;
     });
 
-    const statusColors: Record<ProductStatus, string> = {
-        ACTIVE: 'bg-green-100 text-green-700',
-        DRAFT: 'bg-yellow-100 text-yellow-700',
-        ARCHIVED: 'bg-gray-100 text-gray-700',
+    const statusColors: Record<string, string> = {
+        active: 'bg-green-100 text-green-700',
+        draft: 'bg-yellow-100 text-yellow-700',
+        archived: 'bg-gray-100 text-gray-700',
     };
 
     const statusCounts = {
-        ALL: mockProducts.length,
-        ACTIVE: mockProducts.filter((p) => p.status === 'ACTIVE').length,
-        DRAFT: mockProducts.filter((p) => p.status === 'DRAFT').length,
-        ARCHIVED: mockProducts.filter((p) => p.status === 'ARCHIVED').length,
+        ALL: products.length,
+        ACTIVE: products.filter((p) => p.status === 'active').length,
+        DRAFT: products.filter((p) => p.status === 'draft').length,
+        ARCHIVED: products.filter((p) => p.status === 'archived').length,
     };
+
+    if (loading) return <div className="p-8">Ładowanie produktów...</div>;
+    if (error) return <div className="p-8 text-red-500">Błąd: {error}</div>;
 
     return (
         <div className="p-8">
@@ -132,13 +100,14 @@ export default function ProductsPage() {
                                 onChange={(e) => setStatusFilter(e.target.value as ProductStatus | 'ALL')}
                             >
                                 <option value="ALL">Wszystkie ({statusCounts.ALL})</option>
-                                <option value="ACTIVE">Aktywne ({statusCounts.ACTIVE})</option>
-                                <option value="DRAFT">Wersje robocze ({statusCounts.DRAFT})</option>
-                                <option value="ARCHIVED">Zarchiwizowane ({statusCounts.ARCHIVED})</option>
+                                <option value="active">Aktywne ({statusCounts.ACTIVE})</option>
+                                <option value="draft">Wersje robocze ({statusCounts.DRAFT})</option>
+                                <option value="archived">Zarchiwizowane ({statusCounts.ARCHIVED})</option>
                             </select>
                         </div>
 
-                        {/* Type Filter */}
+                        {/* Type Filter - Disabled for now as import defaults to SIMPLE */}
+                        {/* 
                         <div>
                             <label className="block text-sm font-medium mb-2">Typ</label>
                             <select
@@ -153,6 +122,7 @@ export default function ProductsPage() {
                                 <option value="SERVICE">Usługa</option>
                             </select>
                         </div>
+                        */}
                     </div>
                 </CardContent>
             </Card>
@@ -173,9 +143,9 @@ export default function ProductsPage() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Marka
                                     </th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Typ
-                                    </th>
+                                    </th> */}
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                         Status
                                     </th>
@@ -202,18 +172,18 @@ export default function ProductsPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="text-sm">{product.brand}</span>
+                                            <span className="text-sm">{product.brand || '-'}</span>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        {/* <td className="px-6 py-4 whitespace-nowrap">
                                             <span className="text-sm">{product.type}</span>
-                                        </td>
+                                        </td> */}
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[product.status]}`}>
-                                                {product.status}
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[product.status] || 'bg-gray-100'}`}>
+                                                {product.status === 'active' ? 'AKTYWNY' : product.status === 'draft' ? 'SZKIC' : 'ARCHIWUM'}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {product.updatedAt.toLocaleDateString('pl-PL')}
+                                            {new Date(product.updatedAt).toLocaleDateString('pl-PL')}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <Link
